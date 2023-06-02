@@ -256,9 +256,4 @@ inputLarger.addEventListener("change", (event) => {
   }
 });
 
-// Step 4 content
 
-form.onsubmit = (e) => {
-  e.preventDefault();
-  alert("form sbmited");
-};
