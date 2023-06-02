@@ -189,6 +189,9 @@ for (let i = 0; i < prevButton.length; i++) {
 // Change plan
 changePlan.onclick = (e) => {
   e.preventDefault();
+  stepNumber[3].classList.remove("active");
+
+stepNumber[1].classList.add("active")
   total = 0;
   formStep[3].style.zIndex = 0;
   formStep[1].style.zIndex = 1;
