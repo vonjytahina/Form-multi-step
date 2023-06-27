@@ -147,7 +147,7 @@
   z-index: 0;
 }
 
-.form-step.step-1 {
+.form-step.form-step.step-1 {
   z-index: 1;
 }
 
@@ -235,13 +235,34 @@
 }
 
 .form-step.step-2 input[type="radio"] {
-  display: inline;
-  width: 0%;
-  visibility: hidden;
-  margin: 0px;
+  display: none;
+}
+
+.form-step.step-2 .step-2-inputs-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 4%;
+}
+
+.form-step.step-2 .step-2-inputs-container .step-2-input {
+  width: 32%;
 }
 
 .form-step.step-2 label {
+  display: block;
+  cursor: pointer;
+  width: 100%;
+  border: 1px solid var(--neutral-light-gray);
+  border-radius: 5px;
+  padding: 20px;
+  outline: none;
+  font-size: 16px;
+  margin: 0px;
+  transition: all .3s ease-in-out;
+}
+
+.form-step.step-2 label.monthly,
+.form-step.step-2 label.yearly {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -265,6 +286,7 @@
 }
 
 .form-step.step-2 label .plan-text {
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -279,7 +301,17 @@
   margin: 0px;
   font-weight: normal;
   font-size: 16px;
-  font-weight: 500;
+}
+
+.form-step.step-2 label .plan-text .plan-text-year {
+  display: none;
+}
+
+.form-step.step-2 label .plan-text .plan-text-free {
+  font-weight: normal;
+  font-size: 12px;
+  color: var(--primary-marine-blue);
+  display: none;
 }
 
 .form-step.step-2 input[type="radio"]:checked+label {
@@ -350,29 +382,34 @@
 }
 
 .form-step.step-3 input {
-  width: 10px;
+  width: 50px;
   margin: 0;
-  zoom: 2;
+  zoom: 1.5;
   border: none;
   outline: none;
   accent-color: var(--primary-purplish-blue);
   cursor: pointer;
 }
 
-.form-step.step-3 .checkbox-container {
+.form-step.step-3 .div-online-service,
+.form-step.step-3 .div-larger-storage,
+.form-step.step-3 .div-customizable-profile {
   appearance: none;
   display: flex;
   margin-bottom: 20px;
-  padding: 10px;
-  gap: 10px;
+  padding: 0px;
+  gap: 0px;
   border: 1px solid var(--neutral-light-gray);
   border-radius: 5px;
   font-size: 16px;
   align-items: center;
   transition: all .3s ease-in-out;
+  cursor: pointer;
 }
 
-.form-step.step-3 .checkbox-container:hover {
+.form-step.step-3 .div-online-service:hover,
+.form-step.step-3 .div-larger-storage:hover,
+.form-step.step-3 .div-customizable-profile:hover {
   background: var(--neutral-albaster);
 }
 
@@ -380,7 +417,10 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+  height: 75px;
   align-items: center;
+  cursor: pointer;
+  padding-right: 20px;
 }
 
 .add-ons-label .add-ons-text {
@@ -401,10 +441,15 @@
   font-weight: 500;
 }
 
-.add-ons-label .add-ons-price {
-  color: var(--neutral-cool-gray);
+.add-ons-label .add-ons-price-month,
+.add-ons-label .add-ons-price-year {
+  color: var(--primary-purplish-blue);
   font-size: 16px;
   font-weight: 500;
+}
+
+.add-ons-label .add-ons-price-year {
+  display: none;
 }
 
 .form-step.step-4 .summary-container {
@@ -490,6 +535,23 @@
   transition: all .3s ease-in-out;
 }
 
+.form-step.step-5 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
+}
+
+.form-step.step-5 h2 {
+  font-size: 32px;
+  margin: 30px 0px 5px 0px;
+}
+
+.form-step.step-5 p {
+  text-align: center;
+}
+
 /* responsive */
 @media screen and (max-width: 375px) {
   .container {
@@ -562,7 +624,7 @@
   }
 
   .right-container .form-step {
-    padding-top: 20px;
+    padding-top: 30px;
     position: absolute;
     background: #fff;
     width: 100%;
@@ -643,6 +705,50 @@
     margin: 0px auto 20px;
   }
 
+  .form-step.step-2 .step-2-inputs-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-step.step-2 .step-2-inputs-container .step-2-input {
+    width: 100%;
+  }
+
+  .form-step.step-2 label {
+    display: flex;
+    align-items: top;
+    padding: 10px;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+
+  .form-step.step-2 label .plan-text {
+    margin-top: 0px;
+  }
+
+  .form-step.step-2 label .plan-text h3 {
+    font-size: 16px;
+  }
+
+  .form-step.step-2 label .plan-text .plan-text-month,
+  .form-step.step-2 label .plan-text .plan-text-year {
+    font-size: 14px;
+  }
+
+  .form-step.step-2 .billing-container {
+    margin: 0 auto 0;
+    ;
+  }
+
+  .form-step.step-3 input {
+    width: 20px;
+    margin-left: 5px;
+  }
+
+  .form-step.step-3 .add-ons-label {
+    padding-right: 10px;
+  }
+
   .add-ons-label .add-ons-text h3 {
     font-size: 16px;
   }
@@ -652,6 +758,11 @@
   }
 
   .add-ons-label .add-ons-price {
+    font-size: 14px;
+  }
+
+  .add-ons-label .add-ons-price-year, 
+  .add-ons-label .add-ons-price-month {
     font-size: 14px;
   }
 

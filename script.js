@@ -21,6 +21,16 @@ const errorEmail = document.querySelector(".error-email");
 const errorPhone = document.querySelector(".error-phone");
 const summaryPlan = document.querySelector(".summary-plan-text h3");
 const summaryPlanPrice = document.querySelector(".summary-plan-price");
+const planTextMonth = document.querySelectorAll(".plan-text-month");
+const planTextYear = document.querySelectorAll(".plan-text-year");
+const planTextFree = document.querySelectorAll(".plan-text-free");
+const divOnlineService = document.querySelector(".div-online-service");
+const divLargerStorage = document.querySelector(".div-larger-storage");
+const divCustomizableProfile = document.querySelector(
+  ".div-customizable-profile"
+);
+const addonsMonthPrice = document.querySelectorAll(".add-ons-price-month");
+const addonsYearPrice = document.querySelectorAll(".add-ons-price-year");
 const summaryAddOnsContainer = document.querySelector(
   ".summary-add-ons-container"
 );
@@ -42,11 +52,11 @@ yearly.checked = false;
 monthly.checked = true;
 
 // Step 3
-var inputAddons = [{ title: "", price: "" }];
+var inputAddons = [];
 
 // Step 4
 var planPrice = "";
-var total = 0;
+var total = 9;
 var subTotal = 0;
 
 for (let i = 0; i < stepNumber.length; i++) {
@@ -107,10 +117,8 @@ for (let i = 0; i < buttonNext.length; i++) {
       validEmail == true &&
       validPhone == true
     ) {
-      
       formStep[i].style.zIndex = 0;
       formStep[i + 1].style.zIndex = 1;
-      
     }
     // step 2
     if (i == 1) {
@@ -122,17 +130,26 @@ for (let i = 0; i < buttonNext.length; i++) {
       var billingSelectedValue = document.querySelector(
         'input[name="billing"]:checked'
       );
-      if (planSelectedValue.value == "Arcade") {
+      if (planSelectedValue.value == "Arcade" && monthly.checked) {
         planPrice = "$9/mo";
         total = 9;
+      } else if (planSelectedValue.value == "Arcade" && yearly.checked) {
+        planPrice = "$90/yr";
+        total = 90;
       }
-      if (planSelectedValue.value == "Advanced") {
+      if (planSelectedValue.value == "Advanced" && monthly.checked) {
         planPrice = "$12/mo";
         total = 12;
+      } else if (planSelectedValue.value == "Advanced" && yearly.checked) {
+        planPrice = "$120/yr";
+        total = 120;
       }
-      if (planSelectedValue.value == "Pro") {
+      if (planSelectedValue.value == "Pro" && monthly.checked) {
         planPrice = "$15/mo";
         total = 15;
+      } else if (planSelectedValue.value == "Pro" && yearly.checked) {
+        planPrice = "$150/yr";
+        total = 150;
       }
       summaryPlan.innerHTML = `${planSelectedValue.value} (${billingSelectedValue.value})`;
       summaryPlanPrice.innerHTML = `${planPrice}`;
@@ -141,32 +158,31 @@ for (let i = 0; i < buttonNext.length; i++) {
     }
     // step 3
     if (i == 2) {
+      stepNumber[1].classList.remove("active");
       stepNumber[2].classList.remove("active");
       stepNumber[3].classList.add("active");
-      const mappedArray = Array.from(inputAddons.keys())
-        .map((index) => {
-          const adjustedIndex = index + 1;
-          return inputAddons[adjustedIndex];
-        })
-        .filter((value) => value !== undefined);
-
-      summaryAddOnsContainer.innerHTML = mappedArray
+      summaryAddOnsContainer.innerHTML = inputAddons
         .map(
-          (val, index) => `<div class="summary-add-ons">
-    <div class="summary-add-ons-text">${val.title}</div>
-    <div class="summary-add-ons-price">${val.price}</div>
-  </div>`
+          (val) => `<div class="summary-add-ons">
+      <div class="summary-add-ons-text">${val.title}</div>
+      <div class="summary-add-ons-price">${val.price}</div>
+    </div>`
         )
         .join("");
       var finalTotal = total + subTotal;
-      summaryTotalPrice.innerHTML = `+$${finalTotal}/mo`;
+      if (monthly.checked) {
+        summaryTotalPrice.innerHTML = `+$${finalTotal}/mo`;
+      } else if (yearly.checked) {
+        summaryTotalPrice.innerHTML = `+$${finalTotal}/yr`;
+      }
+
       formStep[i].style.zIndex = 0;
       formStep[i + 1].style.zIndex = 1;
     }
     // step 4
     if (i == 3) {
-      for(let j = 0; j < buttonContainer.length; j++) {
-        buttonContainer[j].style.display = "none"
+      for (let j = 0; j < buttonContainer.length; j++) {
+        buttonContainer[j].style.display = "none";
       }
       stepNumber[3].classList.remove("active");
       formStep[i].style.zIndex = 0;
@@ -189,9 +205,9 @@ for (let i = 0; i < prevButton.length; i++) {
 // Change plan
 changePlan.onclick = (e) => {
   e.preventDefault();
-  stepNumber[3].classList.remove("active");
-  stepNumber[1].classList.add("active")
   total = 0;
+  stepNumber[3].classList.remove("active");
+  stepNumber[1].classList.add("active");
   formStep[3].style.zIndex = 0;
   formStep[1].style.zIndex = 1;
 };
@@ -204,56 +220,146 @@ switchBilling.onclick = (e) => {
     circle.style.left = "70%";
     yearly.checked = true;
     monthly.checked = false;
+    // show yearly plan and add-ons details
+    for (let i = 0; i < 3; i++) {
+      planTextMonth[i].style.display = "none";
+      planTextYear[i].style.display = "block";
+      planTextFree[i].style.display = "block";
+      addonsMonthPrice[i].style.display = "none";
+      addonsYearPrice[i].style.display = "block";
+    }
     yearlyLabel.style.color = "#02295a";
     monthlyLabel.style.color = "#9699ab";
     summaryTotaltext.innerHTML = "Total (per year)";
+    // reset all months add-ons
+    inputAddons = inputAddons.filter((i) => !i.price.includes("mo"))
+    if(inputOnline.checked) {
+      subTotal -= 1
+      inputOnline.checked = false
+      divOnlineService.classList.remove("border-active");
+    } 
+    if(inputLarger.checked) {
+      subTotal -= 2
+      inputLarger.checked = false
+      divLargerStorage.classList.remove("border-active");
+    } 
+    if(inputCustom.checked) {
+      subTotal -= 2
+      inputCustom.checked = false
+      divCustomizableProfile.classList.remove("border-active");
+    } 
+    inputAddons = []
   } else if (circle.style.left === "70%") {
     circle.style.left = "30%";
     yearly.checked = false;
     monthly.checked = true;
+    // show monthly plan and add-ons details
+    for (let i = 0; i < 3; i++) {
+      planTextMonth[i].style.display = "block";
+      planTextYear[i].style.display = "none";
+      planTextFree[i].style.display = "none";
+      addonsMonthPrice[i].style.display = "block";
+      addonsYearPrice[i].style.display = "none";
+    }
     yearlyLabel.style.color = "#9699ab";
     monthlyLabel.style.color = "#02295a";
     summaryTotaltext.innerHTML = "Total (per month)";
+    inputAddons = inputAddons.filter((i) => !i.price.includes("yr"))
+     // reset all years add-ons
+     inputAddons = inputAddons.filter((i) => !i.price.includes("mo"))
+     if(inputOnline.checked) {
+       subTotal -= 10
+       inputOnline.checked = false
+       divOnlineService.classList.remove("border-active");
+     } 
+     if(inputLarger.checked) {
+       subTotal -= 20
+       inputLarger.checked = false
+       divLargerStorage.classList.remove("border-active");
+     } 
+     if(inputCustom.checked) {
+       subTotal -= 20
+       inputCustom.checked = false
+       divCustomizableProfile.classList.remove("border-active");
+     } 
+    inputAddons = []
   }
 };
 
-// Step 3 checkbox switch
-inputOnline.addEventListener("change", (event) => {
-  const checkParent = inputOnline.parentNode;
-  console.log(checkParent);
-  if (event.currentTarget.checked) {
-    checkParent.classList.add("border-active");
-    inputAddons.push({ title: inputOnline.value, price: "+$1/mo" });
-    subTotal += 1;
+// checkbox container step-3
+divOnlineService.querySelector("label").onclick = (e) => {
+  e.preventDefault();
+  if (inputOnline.checked == false) {
+    inputOnline.checked = true;
+    divOnlineService.classList.add("border-active");
+    if (monthly.checked == true) {
+      inputAddons.push({ title: inputOnline.value, price: "+$1/mo" });
+      subTotal += 1;
+    } else if (monthly.checked == false) {
+      inputAddons.push({ title: inputOnline.value, price: "+$10/yr" });
+      subTotal += 10;
+    }
   } else {
-    checkParent.classList.remove("border-active");
-    inputAddons = inputAddons.filter((i) => i.title !== inputOnline.value);
-    subTotal -= 1;
+    inputOnline.checked = false;
+    divOnlineService.classList.remove("border-active");
+    if (monthly.checked == true) {
+      inputAddons = inputAddons.filter((i) => i.title !== inputOnline.value);
+      subTotal -= 1;
+    } else if (monthly.checked == false) {
+      inputAddons = inputAddons.filter((i) => i.title !== inputOnline.value);
+      subTotal -= 10;
+    }
   }
-});
-inputCustom.addEventListener("change", (event) => {
-  const checkParent = inputCustom.parentNode;
-  if (event.currentTarget.checked) {
-    checkParent.classList.add("border-active");
-    inputAddons.push({ title: inputCustom.value, price: "+$2/mo" });
-    subTotal += 2;
-  } else {
-    checkParent.classList.remove("border-active");
-    inputAddons = inputAddons.filter((i) => i.title !== inputCustom.value);
-    subTotal -= 2;
-  }
-});
-inputLarger.addEventListener("change", (event) => {
-  const checkParent = inputLarger.parentNode;
-  if (event.currentTarget.checked) {
-    checkParent.classList.add("border-active");
-    inputAddons.push({ title: inputLarger.value, price: "+$2/mo" });
-    subTotal += 2;
-  } else {
-    checkParent.classList.remove("border-active");
-    inputAddons = inputAddons.filter((i) => i.title !== inputLarger.value);
-    subTotal -= 2;
-  }
-});
+};
 
+divLargerStorage.querySelector("label").onclick = (e) => {
+  e.preventDefault();
+  console.log(e.target);
 
+  if (inputLarger.checked == false) {
+    inputLarger.checked = true;
+    divLargerStorage.classList.add("border-active");
+    if (monthly.checked == true) {
+      inputAddons.push({ title: inputLarger.value, price: "+$2/mo" });
+      subTotal += 2;
+    } else if (monthly.checked == false) {
+      inputAddons.push({ title: inputLarger.value, price: "+$20/yr" });
+      subTotal += 20;
+    }
+  } else {
+    inputLarger.checked = false;
+    divLargerStorage.classList.remove("border-active");
+    if (monthly.checked == true) {
+      inputAddons = inputAddons.filter((i) => i.title !== inputLarger.value);
+      subTotal -= 2;
+    } else if (monthly.checked == false) {
+      inputAddons = inputAddons.filter((i) => i.title !== inputLarger.value);
+      subTotal -= 20;
+    }
+  }
+};
+
+divCustomizableProfile.querySelector("label").onclick = (e) => {
+  e.preventDefault();
+  if (inputCustom.checked == false) {
+    inputCustom.checked = true;
+    divCustomizableProfile.classList.add("border-active");
+    if (monthly.checked == true) {
+      inputAddons.push({ title: inputCustom.value, price: "+$2/mo" });
+      subTotal += 2;
+    } else if (monthly.checked == false) {
+      inputAddons.push({ title: inputCustom.value, price: "+$20/yr" });
+      subTotal += 20;
+    }
+  } else {
+    inputCustom.checked = false;
+    divCustomizableProfile.classList.remove("border-active");
+    if (monthly.checked == true) {
+      inputAddons = inputAddons.filter((i) => i.title !== inputCustom.value);
+      subTotal -= 2;
+    } else if (monthly.checked == false) {
+      inputAddons = inputAddons.filter((i) => i.title !== inputCustom.value);
+      subTotal -= 20;
+    }
+  }
+};
